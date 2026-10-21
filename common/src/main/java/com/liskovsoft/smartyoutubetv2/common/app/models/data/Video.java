@@ -23,6 +23,7 @@ import com.liskovsoft.smartyoutubetv2.common.app.models.playback.service.VideoSt
 import com.liskovsoft.smartyoutubetv2.common.prefs.AllowedLanguageData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.BlockedChannelData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.BlockedKeywordData;
+import com.liskovsoft.smartyoutubetv2.common.prefs.GeneralData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerTweaksData;
 import com.liskovsoft.youtubeapi.service.internal.MediaServiceData;
 import com.liskovsoft.googlecommon.common.helpers.ServiceHelper;
@@ -868,10 +869,10 @@ public final class Video {
                                 return false;
                             }
                             MediaServiceData mediaServiceData = MediaServiceData.instance();
-                            if (mediaServiceData.isContentHidden(MediaServiceData.CONTENT_STREAMS_ALL) && video.isLive) {
+                            if (mediaServiceData.isContentHidden(GeneralData.CONTENT_STREAMS_ALL) && video.isLive) {
                                 return false;
                             }
-                            if (mediaServiceData.isContentHidden(MediaServiceData.CONTENT_UPCOMING_ALL) && video.isUpcoming) {
+                            if (mediaServiceData.isContentHidden(GeneralData.CONTENT_UPCOMING_ALL) && video.isUpcoming) {
                                 return false;
                             }
                             if (!blockedChannelData.isEmpty() && blockedChannelData.containsChannel(video.channelId, video.getAuthor())) {
