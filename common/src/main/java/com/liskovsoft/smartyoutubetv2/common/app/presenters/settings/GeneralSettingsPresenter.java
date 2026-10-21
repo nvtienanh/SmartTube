@@ -197,12 +197,12 @@ public class GeneralSettingsPresenter extends BasePresenter<Void> {
                 }));
 
         options.add(UiOptionItem.from(getContext().getString(R.string.hide_live_streams_all),
-                option -> mMediaServiceData.setContentHidden(MediaServiceData.CONTENT_STREAMS_ALL, option.isSelected()),
-                mMediaServiceData.isContentHidden(MediaServiceData.CONTENT_STREAMS_ALL)));
+                option -> mMediaServiceData.setContentHidden(GeneralData.CONTENT_STREAMS_ALL, option.isSelected()),
+                mMediaServiceData.isContentHidden(GeneralData.CONTENT_STREAMS_ALL)));
 
         options.add(UiOptionItem.from(getContext().getString(R.string.hide_upcoming_all),
-                option -> mMediaServiceData.setContentHidden(MediaServiceData.CONTENT_UPCOMING_ALL, option.isSelected()),
-                mMediaServiceData.isContentHidden(MediaServiceData.CONTENT_UPCOMING_ALL)));
+                option -> mMediaServiceData.setContentHidden(GeneralData.CONTENT_UPCOMING_ALL, option.isSelected()),
+                mMediaServiceData.isContentHidden(GeneralData.CONTENT_UPCOMING_ALL)));
 
         options.add(UiOptionItem.from(getContext().getString(R.string.allowed_languages),
                 getContext().getString(R.string.allowed_languages_desc),
