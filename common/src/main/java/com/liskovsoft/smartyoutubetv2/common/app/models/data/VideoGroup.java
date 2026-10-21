@@ -8,8 +8,10 @@ import com.liskovsoft.sharedutils.mylogger.Log;
 import com.liskovsoft.sharedutils.prefs.GlobalPreferences;
 import com.liskovsoft.smartyoutubetv2.common.app.models.playback.service.VideoStateService;
 import com.liskovsoft.smartyoutubetv2.common.app.models.playback.service.VideoStateService.State;
+import com.liskovsoft.smartyoutubetv2.common.prefs.AllowedLanguageData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.BlockedChannelData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.BlockedKeywordData;
+import com.liskovsoft.youtubeapi.service.internal.MediaServiceData;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -455,7 +457,7 @@ public class VideoGroup {
     }
 
     public void add(int idx, Video video) {
-        if (video == null || video.isEmpty() || isChannelBlocked(video) || isKeywordBlocked(video) || isWatchedSuggestion(video)) {
+        if (video == null || video.isEmpty() || isChannelBlocked(video) || isKeywordBlocked(video) || isLanguageBlocked(video) || isLiveOrUpcomingBlocked(video) || isWatchedSuggestion(video)) {
             return;
         }
 
@@ -506,6 +508,38 @@ public class VideoGroup {
         }
 
         return blockedKeywordData.isBlocked(video);
+    }
+
+    private boolean isLanguageBlocked(Video video) {
+        if (video.isChapter) {
+            return false;
+        }
+
+        AllowedLanguageData allowedLanguageData = AllowedLanguageData.instance(GlobalPreferences.context());
+
+        if (allowedLanguageData.isEmpty()) {
+            return false;
+        }
+
+        return allowedLanguageData.isLanguageBlocked(video);
+    }
+
+    private boolean isLiveOrUpcomingBlocked(Video video) {
+        if (video == null || video.isChapter) {
+            return false;
+        }
+
+        MediaServiceData mediaServiceData = MediaServiceData.instance();
+
+        if (video.isLive && mediaServiceData.isContentHidden(MediaServiceData.CONTENT_STREAMS_ALL)) {
+            return true;
+        }
+
+        if (video.isUpcoming && mediaServiceData.isContentHidden(MediaServiceData.CONTENT_UPCOMING_ALL)) {
+            return true;
+        }
+
+        return false;
     }
 
     private boolean isWatchedSuggestion(Video video) {

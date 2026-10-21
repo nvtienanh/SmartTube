@@ -85,6 +85,7 @@ import com.liskovsoft.smartyoutubetv2.common.misc.MotherActivity;
 import com.liskovsoft.smartyoutubetv2.common.misc.RemoteControlService;
 import com.liskovsoft.smartyoutubetv2.common.misc.RemoteControlWorker;
 import com.liskovsoft.smartyoutubetv2.common.misc.ScreensaverManager;
+import com.liskovsoft.smartyoutubetv2.common.prefs.AllowedLanguageData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.BlockedChannelData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.BlockedKeywordData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.GeneralData;
@@ -1360,5 +1361,6 @@ public class Utils {
         mediaServiceData.persistNow();
         BlockedChannelData.instance(context).persistNow();
         BlockedKeywordData.instance(context).persistNow();
+        AllowedLanguageData.instance(context).persistNow();
     }
 }
