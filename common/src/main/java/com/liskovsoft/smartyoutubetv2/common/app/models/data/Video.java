@@ -1,7 +1,6 @@
 package com.liskovsoft.smartyoutubetv2.common.app.models.data;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,8 +20,11 @@ import com.liskovsoft.sharedutils.helpers.Helpers;
 import com.liskovsoft.sharedutils.helpers.MessageHelpers;
 import com.liskovsoft.sharedutils.prefs.GlobalPreferences;
 import com.liskovsoft.smartyoutubetv2.common.app.models.playback.service.VideoStateService;
+import com.liskovsoft.smartyoutubetv2.common.prefs.AllowedLanguageData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.BlockedChannelData;
+import com.liskovsoft.smartyoutubetv2.common.prefs.BlockedKeywordData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerTweaksData;
+import com.liskovsoft.youtubeapi.service.internal.MediaServiceData;
 import com.liskovsoft.googlecommon.common.helpers.ServiceHelper;
 import com.liskovsoft.googlecommon.common.helpers.YouTubeHelper;
 
@@ -358,7 +360,7 @@ public final class Video {
         }
 
         // Skip subtitles starting with number of views (e.g. 1.4M views). Usually found in channel uploads.
-        return !TextUtils.isEmpty(result) && (!belongsToChannelUploads() || !Helpers.isNumeric(result.substring(0, 1))) ? result.trim() : null;
+        return result != null && !result.isEmpty() && (!belongsToChannelUploads() || !Helpers.isNumeric(result.substring(0, 1))) ? result.trim() : null;
     }
 
     public static List<Video> findVideosByAuthor(VideoGroup group, String author) {
@@ -857,15 +859,31 @@ public final class Video {
             if (suggestions != null && suggestions.size() > 1) {
                 List<MediaItem> mediaItems = suggestions.get(1).getMediaItems();
                 BlockedChannelData blockedChannelData = BlockedChannelData.instance(GlobalPreferences.context());
+                BlockedKeywordData blockedKeywordData = BlockedKeywordData.instance(GlobalPreferences.context());
+                            AllowedLanguageData allowedLanguageData = AllowedLanguageData.instance(GlobalPreferences.context());
                 nextVideo = Helpers.findFirst(mediaItems,
                         item -> {
-                            if (blockedChannelData.isEmpty()) {
-                                return item.getVideoId() != null;
-                            }
-
                             Video video = Video.from(item);
-                            return video != null
-                                    && video.videoId != null && !blockedChannelData.containsChannel(video.channelId, video.getAuthor());
+                            if (video == null || video.videoId == null) {
+                                return false;
+                            }
+                            MediaServiceData mediaServiceData = MediaServiceData.instance();
+                            if (mediaServiceData.isContentHidden(MediaServiceData.CONTENT_STREAMS_ALL) && video.isLive) {
+                                return false;
+                            }
+                            if (mediaServiceData.isContentHidden(MediaServiceData.CONTENT_UPCOMING_ALL) && video.isUpcoming) {
+                                return false;
+                            }
+                            if (!blockedChannelData.isEmpty() && blockedChannelData.containsChannel(video.channelId, video.getAuthor())) {
+                                return false;
+                            }
+                            if (!blockedKeywordData.isEmpty() && blockedKeywordData.isBlocked(video)) {
+                                return false;
+                            }
+                            if (!allowedLanguageData.isEmpty() && allowedLanguageData.isLanguageBlocked(video)) {
+                                return false;
+                            }
+                            return true;
                         });
             }
         }

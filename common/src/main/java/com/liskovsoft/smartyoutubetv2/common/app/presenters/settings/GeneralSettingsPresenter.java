@@ -21,6 +21,8 @@ import com.liskovsoft.smartyoutubetv2.common.app.presenters.dialogs.menu.provide
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.service.SidebarService;
 import com.liskovsoft.smartyoutubetv2.common.misc.MediaServiceManager;
 import com.liskovsoft.smartyoutubetv2.common.prefs.AppPrefs;
+import com.liskovsoft.smartyoutubetv2.common.prefs.AllowedLanguageData;
+import com.liskovsoft.smartyoutubetv2.common.prefs.BlockedKeywordData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.GeneralData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.MainUIData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.NetworkData;
@@ -179,6 +181,32 @@ public class GeneralSettingsPresenter extends BasePresenter<Void> {
         options.add(UiOptionItem.from(getContext().getString(R.string.hide_upcoming_channel),
                 option -> mMediaServiceData.setContentHidden(MediaServiceData.CONTENT_UPCOMING_CHANNEL, option.isSelected()),
                 mMediaServiceData.isContentHidden(MediaServiceData.CONTENT_UPCOMING_CHANNEL)));
+
+        options.add(UiOptionItem.from(getContext().getString(R.string.block_keywords),
+                getContext().getString(R.string.block_keywords_desc),
+                option -> {
+                    BlockedKeywordData keywordData = BlockedKeywordData.instance(getContext());
+                    SimpleEditDialog.show(
+                            getContext(),
+                            getContext().getString(R.string.block_keywords),
+                            keywordData.getRawKeywords(),
+                            newValue -> {
+                                keywordData.setRawKeywords(newValue);
+                                return true;
+                            });
+                }));
+
+        options.add(UiOptionItem.from(getContext().getString(R.string.hide_live_streams_all),
+                option -> mMediaServiceData.setContentHidden(MediaServiceData.CONTENT_STREAMS_ALL, option.isSelected()),
+                mMediaServiceData.isContentHidden(MediaServiceData.CONTENT_STREAMS_ALL)));
+
+        options.add(UiOptionItem.from(getContext().getString(R.string.hide_upcoming_all),
+                option -> mMediaServiceData.setContentHidden(MediaServiceData.CONTENT_UPCOMING_ALL, option.isSelected()),
+                mMediaServiceData.isContentHidden(MediaServiceData.CONTENT_UPCOMING_ALL)));
+
+        options.add(UiOptionItem.from(getContext().getString(R.string.allowed_languages),
+                getContext().getString(R.string.allowed_languages_desc),
+                option -> showAllowedLanguagesDialog()));
 
         settingsPresenter.appendCheckedCategory(getContext().getString(R.string.hide_unwanted_content), options);
     }
@@ -348,7 +376,7 @@ public class GeneralSettingsPresenter extends BasePresenter<Void> {
                     mGeneralData.setDpadUpDownAction(GeneralData.ACTION_UNDEFINED);
                 },
                 mPlayerTweaksData.isQuickSkipVideosAltEnabled()));
-        
+
         options.add(UiOptionItem.from(getContext().getString(R.string.player_quick_skip_videos),
                 option -> {
                     mPlayerTweaksData.setQuickSkipVideosEnabled(option.isSelected());
@@ -420,7 +448,7 @@ public class GeneralSettingsPresenter extends BasePresenter<Void> {
         options.add(UiOptionItem.from("Page Up/Down -> Speed Up/Down",
                 option -> mGeneralData.setPageUpDownAction(option.isSelected() ? GeneralData.ACTION_SPEED_UP_DOWN : GeneralData.ACTION_UNDEFINED),
                 mGeneralData.getPageUpDownAction() == GeneralData.ACTION_SPEED_UP_DOWN));
-        
+
         options.add(UiOptionItem.from("Page Up/Down -> Speed Down/Up",
                 option -> mGeneralData.setPageUpDownAction(option.isSelected() ? GeneralData.ACTION_SPEED_DOWN_UP : GeneralData.ACTION_UNDEFINED),
                 mGeneralData.getPageUpDownAction() == GeneralData.ACTION_SPEED_DOWN_UP));
@@ -716,6 +744,36 @@ public class GeneralSettingsPresenter extends BasePresenter<Void> {
             mPlayerData.setPlaybackMode(PlayerConstants.PLAYBACK_MODE_ALL);
             searchData.setPopularSearchesDisabled(false);
         }
+    }
+
+    private void showAllowedLanguagesDialog() {
+        AppDialogPresenter dialog = AppDialogPresenter.instance(getContext());
+        AllowedLanguageData langData = AllowedLanguageData.instance(getContext());
+
+        List<OptionItem> options = new ArrayList<>();
+
+        String[][] scripts = new String[][] {
+                {AllowedLanguageData.SCRIPT_LATIN, getContext().getString(R.string.lang_script_latin)},
+                {AllowedLanguageData.SCRIPT_CYRILLIC, getContext().getString(R.string.lang_script_cyrillic)},
+                {AllowedLanguageData.SCRIPT_CJK, getContext().getString(R.string.lang_script_cjk)},
+                {AllowedLanguageData.SCRIPT_ARABIC, getContext().getString(R.string.lang_script_arabic)},
+                {AllowedLanguageData.SCRIPT_DEVANAGARI, getContext().getString(R.string.lang_script_devanagari)},
+                {AllowedLanguageData.SCRIPT_THAI, getContext().getString(R.string.lang_script_thai)},
+                {AllowedLanguageData.SCRIPT_HEBREW, getContext().getString(R.string.lang_script_hebrew)},
+                {AllowedLanguageData.SCRIPT_GREEK, getContext().getString(R.string.lang_script_greek)}
+        };
+
+        for (String[] scriptPair : scripts) {
+            String scriptId = scriptPair[0];
+            String scriptTitle = scriptPair[1];
+
+            options.add(UiOptionItem.from(scriptTitle, option -> {
+                langData.setScriptAllowed(scriptId, option.isSelected());
+            }, langData.isScriptAllowed(scriptId)));
+        }
+
+        dialog.appendCheckedCategory(getContext().getString(R.string.allowed_languages), options);
+        dialog.showDialog();
     }
 
     private void showPasswordDialog(AppDialogPresenter settingsPresenter, Runnable onSuccess) {
