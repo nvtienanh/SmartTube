@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 public class GeneralData implements ProfileChangeListener {
+    public static final int CONTENT_STREAMS_ALL = 1 << 15;
+    public static final int CONTENT_UPCOMING_ALL = 1 << 16;
     public static final int SCREENSAVER_TIMEOUT_NEVER = 0;
     private static final String GENERAL_DATA = "general_data";
     public static final int EXIT_NONE = 0;

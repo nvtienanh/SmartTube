@@ -11,6 +11,7 @@ import com.liskovsoft.smartyoutubetv2.common.app.models.playback.service.VideoSt
 import com.liskovsoft.smartyoutubetv2.common.prefs.AllowedLanguageData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.BlockedChannelData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.BlockedKeywordData;
+import com.liskovsoft.smartyoutubetv2.common.prefs.GeneralData;
 import com.liskovsoft.youtubeapi.service.internal.MediaServiceData;
 
 import java.util.ArrayList;
@@ -531,11 +532,11 @@ public class VideoGroup {
 
         MediaServiceData mediaServiceData = MediaServiceData.instance();
 
-        if (video.isLive && mediaServiceData.isContentHidden(MediaServiceData.CONTENT_STREAMS_ALL)) {
+        if (video.isLive && mediaServiceData.isContentHidden(GeneralData.CONTENT_STREAMS_ALL)) {
             return true;
         }
 
-        if (video.isUpcoming && mediaServiceData.isContentHidden(MediaServiceData.CONTENT_UPCOMING_ALL)) {
+        if (video.isUpcoming && mediaServiceData.isContentHidden(GeneralData.CONTENT_UPCOMING_ALL)) {
             return true;
         }
 
