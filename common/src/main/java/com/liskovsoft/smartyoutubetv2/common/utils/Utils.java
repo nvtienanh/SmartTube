@@ -86,6 +86,7 @@ import com.liskovsoft.smartyoutubetv2.common.misc.RemoteControlService;
 import com.liskovsoft.smartyoutubetv2.common.misc.RemoteControlWorker;
 import com.liskovsoft.smartyoutubetv2.common.misc.ScreensaverManager;
 import com.liskovsoft.smartyoutubetv2.common.prefs.BlockedChannelData;
+import com.liskovsoft.smartyoutubetv2.common.prefs.BlockedKeywordData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.GeneralData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.HiddenPrefs;
 import com.liskovsoft.smartyoutubetv2.common.prefs.MainUIData;
@@ -887,7 +888,7 @@ public class Utils {
         }
 
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        
+
         if (Build.VERSION.SDK_INT < 20) {
             return !pm.isScreenOn();
         } else {
@@ -1277,7 +1278,7 @@ public class Utils {
             // 2: Full Gesture Navigation (Android 10+ Arrow)
             return navMode == 2;
         }
-        
+
         return false;
     }
 
@@ -1358,5 +1359,6 @@ public class Utils {
         MediaServiceData mediaServiceData = MediaServiceData.instance();
         mediaServiceData.persistNow();
         BlockedChannelData.instance(context).persistNow();
+        BlockedKeywordData.instance(context).persistNow();
     }
 }

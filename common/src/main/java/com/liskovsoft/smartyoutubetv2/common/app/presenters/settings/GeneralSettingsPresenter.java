@@ -21,6 +21,7 @@ import com.liskovsoft.smartyoutubetv2.common.app.presenters.dialogs.menu.provide
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.service.SidebarService;
 import com.liskovsoft.smartyoutubetv2.common.misc.MediaServiceManager;
 import com.liskovsoft.smartyoutubetv2.common.prefs.AppPrefs;
+import com.liskovsoft.smartyoutubetv2.common.prefs.BlockedKeywordData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.GeneralData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.MainUIData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.NetworkData;
@@ -179,6 +180,20 @@ public class GeneralSettingsPresenter extends BasePresenter<Void> {
         options.add(UiOptionItem.from(getContext().getString(R.string.hide_upcoming_channel),
                 option -> mMediaServiceData.setContentHidden(MediaServiceData.CONTENT_UPCOMING_CHANNEL, option.isSelected()),
                 mMediaServiceData.isContentHidden(MediaServiceData.CONTENT_UPCOMING_CHANNEL)));
+
+        options.add(UiOptionItem.from(getContext().getString(R.string.block_keywords),
+                getContext().getString(R.string.block_keywords_desc),
+                option -> {
+                    BlockedKeywordData keywordData = BlockedKeywordData.instance(getContext());
+                    SimpleEditDialog.show(
+                            getContext(),
+                            getContext().getString(R.string.block_keywords),
+                            keywordData.getRawKeywords(),
+                            newValue -> {
+                                keywordData.setRawKeywords(newValue);
+                                return true;
+                            });
+                }));
 
         settingsPresenter.appendCheckedCategory(getContext().getString(R.string.hide_unwanted_content), options);
     }
@@ -348,7 +363,7 @@ public class GeneralSettingsPresenter extends BasePresenter<Void> {
                     mGeneralData.setDpadUpDownAction(GeneralData.ACTION_UNDEFINED);
                 },
                 mPlayerTweaksData.isQuickSkipVideosAltEnabled()));
-        
+
         options.add(UiOptionItem.from(getContext().getString(R.string.player_quick_skip_videos),
                 option -> {
                     mPlayerTweaksData.setQuickSkipVideosEnabled(option.isSelected());
@@ -420,7 +435,7 @@ public class GeneralSettingsPresenter extends BasePresenter<Void> {
         options.add(UiOptionItem.from("Page Up/Down -> Speed Up/Down",
                 option -> mGeneralData.setPageUpDownAction(option.isSelected() ? GeneralData.ACTION_SPEED_UP_DOWN : GeneralData.ACTION_UNDEFINED),
                 mGeneralData.getPageUpDownAction() == GeneralData.ACTION_SPEED_UP_DOWN));
-        
+
         options.add(UiOptionItem.from("Page Up/Down -> Speed Down/Up",
                 option -> mGeneralData.setPageUpDownAction(option.isSelected() ? GeneralData.ACTION_SPEED_DOWN_UP : GeneralData.ACTION_UNDEFINED),
                 mGeneralData.getPageUpDownAction() == GeneralData.ACTION_SPEED_DOWN_UP));
