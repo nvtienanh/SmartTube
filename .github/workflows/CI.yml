@@ -3,7 +3,7 @@ name: Build Debug APK
 on:
   push:
     branches: [ "develop" ]
-  workflow_dispatch:
+  # workflow_dispatch:
 
 jobs:
   build:
