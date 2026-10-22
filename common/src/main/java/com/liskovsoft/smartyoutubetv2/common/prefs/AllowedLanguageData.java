@@ -2,6 +2,7 @@ package com.liskovsoft.smartyoutubetv2.common.prefs;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Build;
 
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.Video;
 import com.liskovsoft.smartyoutubetv2.common.prefs.AppPrefs.ProfileChangeListener;
@@ -161,14 +162,14 @@ public class AllowedLanguageData implements ProfileChangeListener {
         }
 
         if (block == Character.UnicodeBlock.ARABIC ||
-                block == Character.UnicodeBlock.ARABIC_SUPPLEMENT ||
+                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && block == Character.UnicodeBlock.ARABIC_SUPPLEMENT) ||
                 block == Character.UnicodeBlock.ARABIC_PRESENTATION_FORMS_A ||
                 block == Character.UnicodeBlock.ARABIC_PRESENTATION_FORMS_B) {
             return SCRIPT_ARABIC;
         }
 
         if (block == Character.UnicodeBlock.DEVANAGARI ||
-                block == Character.UnicodeBlock.DEVANAGARI_EXTENDED) {
+                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && block == Character.UnicodeBlock.DEVANAGARI_EXTENDED)) {
             return SCRIPT_DEVANAGARI;
         }
 
