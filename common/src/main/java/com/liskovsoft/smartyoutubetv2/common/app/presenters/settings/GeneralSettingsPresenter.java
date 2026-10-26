@@ -618,7 +618,10 @@ public class GeneralSettingsPresenter extends BasePresenter<Void> {
                 option -> {
                     if (option.isSelected()) {
                         AppDialogUtil.showConfirmationDialog(getContext(), getContext().getString(R.string.lost_setting_warning),
-                                () -> showPasswordDialog(settingsPresenter, () -> enableChildMode(option.isSelected())),
+                                () -> showPasswordDialog(settingsPresenter, () -> {
+                                    enableChildMode(option.isSelected());
+                                    showChildModeSettingsDialog();
+                                }),
                                 settingsPresenter::closeDialog);
                     } else {
                         mGeneralData.setSettingsPassword(null);
@@ -627,6 +630,10 @@ public class GeneralSettingsPresenter extends BasePresenter<Void> {
                     }
                 },
                 mGeneralData.isChildModeEnabled()));
+
+        options.add(UiOptionItem.from(getContext().getString(R.string.child_mode_settings),
+                getContext().getString(R.string.child_mode_settings_desc),
+                option -> showChildModeSettingsDialog()));
 
         // Disable long press on buggy controllers.
         options.add(UiOptionItem.from(getContext().getString(R.string.disable_ok_long_press),
@@ -773,6 +780,41 @@ public class GeneralSettingsPresenter extends BasePresenter<Void> {
         }
 
         dialog.appendCheckedCategory(getContext().getString(R.string.allowed_languages), options);
+        dialog.showDialog();
+    }
+
+    private void showChildModeSettingsDialog() {
+        AppDialogPresenter dialog = AppDialogPresenter.instance(getContext());
+
+        List<OptionItem> options = new ArrayList<>();
+
+        options.add(UiOptionItem.from(getContext().getString(R.string.block_keywords),
+                getContext().getString(R.string.block_keywords_desc),
+                option -> {
+                    BlockedKeywordData keywordData = BlockedKeywordData.instance(getContext());
+                    SimpleEditDialog.show(
+                            getContext(),
+                            getContext().getString(R.string.block_keywords),
+                            keywordData.getRawKeywords(),
+                            newValue -> {
+                                keywordData.setRawKeywords(newValue);
+                                return true;
+                            });
+                }));
+
+        options.add(UiOptionItem.from(getContext().getString(R.string.hide_live_streams_all),
+                option -> mMediaServiceData.setContentHidden(GeneralData.CONTENT_STREAMS_ALL, option.isSelected()),
+                mMediaServiceData.isContentHidden(GeneralData.CONTENT_STREAMS_ALL)));
+
+        options.add(UiOptionItem.from(getContext().getString(R.string.hide_upcoming_all),
+                option -> mMediaServiceData.setContentHidden(GeneralData.CONTENT_UPCOMING_ALL, option.isSelected()),
+                mMediaServiceData.isContentHidden(GeneralData.CONTENT_UPCOMING_ALL)));
+
+        options.add(UiOptionItem.from(getContext().getString(R.string.allowed_languages),
+                getContext().getString(R.string.allowed_languages_desc),
+                option -> showAllowedLanguagesDialog()));
+
+        dialog.appendCheckedCategory(getContext().getString(R.string.child_mode_settings), options);
         dialog.showDialog();
     }
 

@@ -552,6 +552,8 @@
   <string name="enter_settings_password">Nhập mật khẩu cài đặt</string>
   <string name="child_mode">Chế độ trẻ em</string>
   <string name="child_mode_desc">Trong chế độ này, người dùng không thể tìm kiếm hoặc xem nội dung đề xuất. Trang cài đặt sẽ được bảo vệ bằng mật khẩu.</string>
+  <string name="child_mode_settings">Cài đặt bộ lọc chế độ trẻ em</string>
+  <string name="child_mode_settings_desc">Cấu hình từ khóa bị chặn, ngôn ngữ cho phép và ẩn livestream cho chế độ trẻ em</string>
   <string name="player_button_long_click">Giữ nút này để mở thêm tuỳ chọn</string>
   <string name="video_rotate">Xoay</string>
   <string name="live_stream_fix_4k_desc">Vô hiệu hoá việc tua lùi video phát trực tiếp. Cải thiện đáng kể hiệu suất. Độ phân giải tối đa là 4K.</string>
