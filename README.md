@@ -47,7 +47,7 @@ Give it a try!
 
 **Do you have any question?** Ctrl+F or ⌘F this readme first!
 
-[**Installation**](#installation) | [**Official Site**](https://smarttubeapp.github.io) | [**Donation**](#donation) | [**FAQ**](#faq) | [Support / Chat](#support) | [Build](#build) | [Translate the app](https://jtbrinkmann.de/tools/android-strings.xml-translator.html) | [Changelog](https://t.me/s/SmartTubeNewsEN) | [Liability](#liability)
+[**Installation**](#installation) | [**Site**](https://smarttubeapp.github.io) | [**Contributors**](#contributors) | [**Donation**](#donation) | [**FAQ**](#faq) | [Support / Chat](#support) | [Build](#build) | [Translate the app](https://jtbrinkmann.de/tools/android-strings.xml-translator.html) | [Changelog](https://t.me/s/SmartTubeNewsEN) | [Liability](#liability)
 
 
 ## Device support
@@ -193,6 +193,12 @@ To enable global voice search, an additional app must be installed alongside Sma
 2. Uninstall the official YouTube app using root (`adb shell pm uninstall com.google.android.youtube.tv`)
 3. Download and install the ATV Bridge SmartTube app: https://kutt.to/stn_bridge_atv (e.g. via _Downloader by AFTVnews_)
 
+## Contributors
+
+Major contributors to this project:
+
+- [@pixkk](https://github.com/pixkk): SABR streaming, Innertube internals
+- [@Jupiops](https://github.com/Jupiops): SABR CDN support
 
 ## Donation
 
@@ -221,8 +227,7 @@ You can report in our Telegram group or via [issue tracker on Github](https://gi
 
 - **Telegram group (international)**: [@SmartTubeEN](http://t.me/SmartTubeEN)  
 - **Discord group (international)**: [SmartTube Official](https://discord.gg/Wt8HDDej5z)  
-- **Telegram group (RU/UA)**: [@SmartTubeUA](http://t.me/SmartTubeUA)  
-- **Email**: firsth<!-- abc@def -->ash@gmai<!-- @abc.com -->l.com
+- **Telegram group (RU/UA)**: [@SmartTubeUA](http://t.me/SmartTubeUA)
 
 The international group is in **English only**. But don't worry if your English is not perfect, we have a friendly international community.
 

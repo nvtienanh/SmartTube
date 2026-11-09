@@ -436,7 +436,7 @@ public class VideoGroup {
 
     public boolean isEmpty() {
         try {
-            return mVideos == null || mVideos.isEmpty();
+            return mVideos == null || mVideos.isEmpty() || (mVideos.size() == 1 && mVideos.get(0).isContinuation());
         } catch (ConcurrentModificationException e) {
             e.printStackTrace();
         }
@@ -471,7 +471,8 @@ public class VideoGroup {
         video.setGroup(this);
 
         VideoStateService stateService = VideoStateService.instance(null);
-        if (stateService != null && (video.percentWatched == -1 || video.percentWatched == 100)) {
+        // Keep remote completion when an older local playback position exists.
+        if (stateService != null && video.percentWatched == -1) {
             State state = stateService.getByVideoId(video.videoId);
             video.sync(state);
         }
